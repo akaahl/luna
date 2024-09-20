@@ -1,3 +1,6 @@
+"use client";
+
+import { UploadDropzone } from "@/app/utils/UploadthingComponents";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,6 +58,21 @@ export default function ArticleCreationRoute({
               <Textarea
                 placeholder="Short description for your article"
                 className="h-32"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Add cover image</Label>
+              <UploadDropzone
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  // Do something with the response
+                  console.log("Files: ", res);
+                  alert("Upload Completed");
+                }}
+                onUploadError={(error: Error) => {
+                  // Do something with the error.
+                  alert(`ERROR! ${error.message}`);
+                }}
               />
             </div>
           </form>
