@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useActionState } from "react";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { siteSchema } from "@/app/utils/zedSchemas";
+import { siteSchema } from "@/app/utils/zodSchemas";
 
 export default function NewSiteRoute() {
   const [lastResult, action] = useActionState(CreateSiteAction, undefined);

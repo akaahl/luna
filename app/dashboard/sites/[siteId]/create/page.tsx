@@ -1,5 +1,6 @@
 "use client";
 
+import TailwindEditor from "@/app/components/dashboard/EditorWrapper";
 import { UploadDropzone } from "@/app/utils/UploadthingComponents";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,13 +14,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Atom } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { JSONContent } from "novel";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ArticleCreationRoute({
   params,
 }: {
   params: { siteId: string };
 }) {
+  const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
+  const [value, setValue] = useState<JSONContent | undefined>(undefined);
+
   return (
     <>
       <div className="flex items-center">
@@ -62,19 +70,33 @@ export default function ArticleCreationRoute({
             </div>
             <div className="grid gap-2">
               <Label>Add cover image</Label>
-              <UploadDropzone
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  // Do something with the response
-                  console.log("Files: ", res);
-                  alert("Upload Completed");
-                }}
-                onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  width={200}
+                  height={200}
+                  alt="Uploaded image"
+                  className="object-cover w-[200px] h-[200px] rounded-lg"
+                />
+              ) : (
+                <UploadDropzone
+                  className="border-input"
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImageUrl(res[0].url);
+                    toast.success("Image has been uploaded");
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error("Something went wrong");
+                  }}
+                />
+              )}
             </div>
+            <div className="grid gap-2">
+              <Label>Article Content</Label>
+              <TailwindEditor initialValue={value} onChange={setValue} />
+            </div>
+            <Button className="w-fit">Submit</Button>
           </form>
         </CardContent>
       </Card>
