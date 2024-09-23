@@ -26,16 +26,14 @@ import { postSchema } from "@/app/utils/zodSchemas";
 import slugify from "react-slugify";
 
 interface IAppProps {
-  data:
-    | {
-        title: string;
-        slug: string;
-        smallDescription: string;
-        articleContent: any;
-        id: string;
-        image: string;
-      }
-    | undefined;
+  data: {
+    title: string;
+    slug: string;
+    smallDescription: string;
+    articleContent: any;
+    id: string;
+    image: string;
+  };
 }
 
 export default function EditArticleForm({ data }: IAppProps) {
