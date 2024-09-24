@@ -26,7 +26,7 @@ export default function SettingsPageRoute({
         </Button>
         <h3 className="text-xl font-semibold">Go back</h3>
       </div>
-      <UploadImageForm />
+      <UploadImageForm siteId={params.siteId} />
       <Card className="border-red-500 bg-red-500/10">
         <CardHeader>
           <CardTitle>Danger</CardTitle>
