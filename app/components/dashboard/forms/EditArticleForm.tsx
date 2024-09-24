@@ -21,7 +21,7 @@ import { useActionState, useState } from "react";
 import { JSONContent } from "novel";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { CreatePostAction } from "@/app/actions";
+import { EditPostAction } from "@/app/actions";
 import { postSchema } from "@/app/utils/zodSchemas";
 import slugify from "react-slugify";
 
@@ -34,9 +34,10 @@ interface IAppProps {
     id: string;
     image: string;
   };
+  siteId: string;
 }
 
-export default function EditArticleForm({ data }: IAppProps) {
+export default function EditArticleForm({ data, siteId }: IAppProps) {
   const [imageUrl, setImageUrl] = useState<undefined | string>(data.image);
   const [value, setValue] = useState<JSONContent | undefined>(
     data.articleContent
@@ -44,7 +45,7 @@ export default function EditArticleForm({ data }: IAppProps) {
   const [title, setTitle] = useState<undefined | string>(data.title);
   const [slug, setSlugValue] = useState<undefined | string>(data.slug);
 
-  const [lastResult, action] = useActionState(CreatePostAction, undefined);
+  const [lastResult, action] = useActionState(EditPostAction, undefined);
 
   const [form, fields] = useForm({
     lastResult,
@@ -83,6 +84,9 @@ export default function EditArticleForm({ data }: IAppProps) {
           id={form.id}
           onSubmit={form.onSubmit}
         >
+          <input type="hidden" name="articleId" value={data.id} />
+          <input type="hidden" name="siteId" value={siteId} />
+
           <div className="grid gap-2">
             <Label>Title</Label>
             <Input
@@ -174,7 +178,7 @@ export default function EditArticleForm({ data }: IAppProps) {
               {fields.articleContent.errors}
             </p>
           </div>
-          <SubmitButton text="Create article" />
+          <SubmitButton text="Edit article" />
         </form>
       </CardContent>
     </Card>

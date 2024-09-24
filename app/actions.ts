@@ -13,7 +13,7 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
     schema: siteSchema,
   });
 
-  if (submission.status !== 'success') {
+  if (submission.status !== "success") {
     return submission.reply();
   }
 
@@ -23,10 +23,10 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
       name: submission.value.name,
       subdirectory: submission.value.subdirectory,
       userId: user.id,
-    }
+    },
   });
 
-  return redirect('/dashboard/sites');
+  return redirect("/dashboard/sites");
 }
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
@@ -36,7 +36,7 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
     schema: postSchema,
   });
 
-  if (submission.status !== 'success') {
+  if (submission.status !== "success") {
     return submission.reply();
   }
 
@@ -49,6 +49,31 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
       image: submission.value.coverImage,
       userId: user.id,
       siteId: formData.get("siteId") as string,
+    },
+  });
+
+  return redirect(`/dashboard/sites/${formData.get("siteId")}`);
+}
+
+export async function EditPostAction(prevState: any, formData: FormData) {
+  const user = await requireUser();
+
+  const submission = parseWithZod(formData, {
+    schema: postSchema,
+  });
+
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  const data = await prisma.post.update({
+    where: { userId: user.id, id: formData.get("articleId") as string },
+    data: {
+      title: submission.value.title,
+      smallDescription: submission.value.smallDescription,
+      slug: submission.value.slug,
+      articleContent: JSON.parse(submission.value.articleContent),
+      image: submission.value.coverImage,
     },
   });
 
