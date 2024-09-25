@@ -1,7 +1,43 @@
-export default function RenderArticle() {
+import { type JSONContent } from "novel";
+import { useMemo } from "react";
+import { generateHTML } from "@tiptap/html";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import Link from "@tiptap/extension-link";
+import Heading from "@tiptap/extension-heading";
+import Underline from "@tiptap/extension-underline";
+import ListItem from "@tiptap/extension-list-item";
+import BulletList from "@tiptap/extension-bullet-list";
+import Code from "@tiptap/extension-code";
+import BlockQuote from "@tiptap/extension-blockquote";
+import TextStyle from "@tiptap/extension-text-style";
+import CodeBlock from "@tiptap/extension-code-block";
+import OrderedList from "@tiptap/extension-ordered-list";
+
+export default function RenderArticle({ json }: { json: JSONContent }) {
+  const output = useMemo(() => {
+    return generateHTML(json, [
+      Document,
+      Paragraph,
+      Text,
+      Link,
+      Underline,
+      Heading,
+      ListItem,
+      BulletList,
+      Code,
+      BlockQuote,
+      TextStyle,
+      CodeBlock,
+      OrderedList,
+    ]);
+  }, [json]);
+
   return (
-    <div>
-      <h1>Article is rendered.</h1>
-    </div>
+    <div
+      className="prose m-auto w-11/12 sm:prose-lg dark:prose-invert sm:w-2/3 pros-li:marker:text-primary"
+      dangerouslySetInnerHTML={{ __html: output }}
+    />
   );
 }

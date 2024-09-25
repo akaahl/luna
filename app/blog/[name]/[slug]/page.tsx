@@ -1,15 +1,18 @@
+import RenderArticle from "@/app/components/dashboard/RenderArticle";
 import prisma from "@/app/utils/db";
 import { Button } from "@/components/ui/button";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { JSONContent } from "novel";
 
 interface Data {
   title: string;
   articleContent: JsonValue;
   smallDescription: string;
   image: string;
+  createdAt: Date;
 }
 
 async function getData(slug: string): Promise<Data> {
@@ -22,6 +25,7 @@ async function getData(slug: string): Promise<Data> {
       smallDescription: true,
       articleContent: true,
       image: true,
+      createdAt: true,
     },
   });
 
@@ -48,7 +52,9 @@ export default async function SlugRoute({
       <div className="flex flex-col items-center justify-center mb-10">
         <div className="m-auto w-full text-center md:w-7/12">
           <p className="m-auto my-5 w-10/12 text-sm font-light text-muted-foreground md:text-base">
-            16 Apr 2024
+            {new Intl.DateTimeFormat("en-US", {
+              dateStyle: "medium",
+            }).format(data.createdAt)}
           </p>
           <h1 className="mb-5 text-3xl font-bold md:text-6xl tracking-tight">
             {data.title}
@@ -68,6 +74,7 @@ export default async function SlugRoute({
           priority
         />
       </div>
+      <RenderArticle json={data.articleContent as JSONContent} />
     </>
   );
 }
