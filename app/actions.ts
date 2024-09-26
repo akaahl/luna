@@ -170,8 +170,15 @@ export async function CreateSubscription(formData: FormData) {
       address: "auto",
       name: "auto",
     },
-    success_url: "http://localhost:3000/payment/success",
-    cancel_url: "http://localhost:3000/payment/cancelled",
-    line_items: [],
+    line_items: [
+      {
+        price: process.env.STRIPE_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+    success_url: "http://localhost:3000/dashboard/payment/success",
+    cancel_url: "http://localhost:3000/dashboard/payment/cancelled",
   });
+
+  redirect(session.url as string);
 }
