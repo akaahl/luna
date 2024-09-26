@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import SubmitButton from "../dashboard/SubmitButtons";
 
 interface iAppProps {
   id: number;
@@ -63,11 +64,13 @@ export default function PricingTable() {
         {PricingPlans.map((item) => (
           <Card key={item.id} className={item.id === 1 ? "border-primary" : ""}>
             <CardHeader>
-              <CardTitle>
+              <CardTitle className="mb-4">
                 {item.id === 1 ? (
                   <div className="flex items-center justify-between">
                     <h3 className="text-primary">{item.cardTitle}</h3>
-                    <p>Most popular</p>
+                    <p className="rounded-full bg-primary/30 px-3 py-1 text-xs font-semibold leading-5">
+                      Most popular
+                    </p>
                   </div>
                 ) : (
                   <>{item.cardTitle}</>
@@ -89,7 +92,15 @@ export default function PricingTable() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button>Choose plan</Button>
+              {item.id === 1 ? (
+                <form className="w-full">
+                  <SubmitButton text="Buy plan" className="w-full mt-5" />
+                </form>
+              ) : (
+                <Button variant="outline" className="w-full mt-5">
+                  Try for free
+                </Button>
+              )}
             </CardFooter>
           </Card>
         ))}
