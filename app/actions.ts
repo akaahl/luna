@@ -10,34 +10,65 @@ import { stripe } from "./utils/stripe";
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 
-  const submission = await parseWithZod(formData, {
-    schema: SiteCreationSchema({
-      async isSubdirectoryUnique() {
-        const existingSubdirectory = await prisma.site.findUnique({
-          where: {
-            subdirectory: formData.get("subdirectory") as string,
-          },
-        });
-        return !existingSubdirectory;
+  const [subStatus, sites] = await Promise.all([
+    prisma.subscription.findUnique({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        status: true,
       },
     }),
-    async: true,
-  });
+    prisma.site.findMany({
+      where: {
+        userId: user.id,
+      },
+    }),
+  ]);
 
-  if (submission.status !== "success") {
-    return submission.reply();
+  if (!subStatus || subStatus.status !== "active") {
+    if (sites.length < 1) {
+      // Allow creating one site
+      createSite();
+    } else {
+      // User already has one site, don't allow
+      redirect("/dashboard/pricing");
+    }
+  } else if (subStatus.status === "active") {
+    // User has an active plan, he can create sites
+    createSite();
   }
 
-  const response = await prisma.site.create({
-    data: {
-      description: submission.value.description,
-      name: submission.value.name,
-      subdirectory: submission.value.subdirectory,
-      userId: user.id,
-    },
-  });
+  async function createSite() {
+    const submission = await parseWithZod(formData, {
+      schema: SiteCreationSchema({
+        async isSubdirectoryUnique() {
+          const existingSubdirectory = await prisma.site.findUnique({
+            where: {
+              subdirectory: formData.get("subdirectory") as string,
+            },
+          });
+          return !existingSubdirectory;
+        },
+      }),
+      async: true,
+    });
 
-  return redirect("/dashboard/sites");
+    if (submission.status !== "success") {
+      return submission.reply();
+    }
+
+    const response = await prisma.site.create({
+      data: {
+        description: submission.value.description,
+        name: submission.value.name,
+        subdirectory: submission.value.subdirectory,
+        userId: user.id,
+      },
+    });
+
+    return redirect("/dashboard/sites");
+  }
 }
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
