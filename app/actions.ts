@@ -26,6 +26,8 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
     }),
   ]);
 
+  console.log(subStatus, sites);
+
   if (!subStatus || subStatus.status !== "active") {
     if (sites.length < 1) {
       // Allow creating one site
@@ -66,9 +68,9 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
         userId: user.id,
       },
     });
-
-    return redirect("/dashboard/sites");
   }
+
+  return redirect("/dashboard/sites");
 }
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
