@@ -38,24 +38,24 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 async function getData(userId: string, siteId: string) {
-  const data = await prisma.post.findMany({
+  const data = await prisma.site.findUnique({
     where: {
+      id: siteId,
       userId,
-      siteId,
     },
     select: {
-      image: true,
-      title: true,
-      createdAt: true,
-      id: true,
-      Site: {
+      subdirectory: true,
+      posts: {
         select: {
-          subdirectory: true,
+          image: true,
+          title: true,
+          createdAt: true,
+          id: true,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
     },
   });
 
@@ -80,7 +80,7 @@ export default async function SiteIdRoute({
     <>
       <div className="flex w-full justify-end gap-x-4">
         <Button asChild variant="secondary">
-          <Link href={`/blog/${data[0]?.Site?.subdirectory}`}>
+          <Link href={`/blog/${data?.subdirectory}`}>
             <Book className="size-4 mr-2" /> View Blog
           </Link>
         </Button>
@@ -95,7 +95,7 @@ export default async function SiteIdRoute({
           </Link>
         </Button>
       </div>
-      {data === undefined || data.length === 0 ? (
+      {data?.posts === undefined || data.posts.length === 0 ? (
         <EmptyState
           href={`/dashboard/sites/${params.siteId}/create`}
           title="You don't have any articles yet."
@@ -123,7 +123,7 @@ export default async function SiteIdRoute({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.map((item) => (
+                  {data.posts.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <Image

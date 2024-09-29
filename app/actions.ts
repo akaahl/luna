@@ -31,10 +31,10 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
   if (!subStatus || subStatus.status !== "active") {
     if (sites.length < 1) {
       // Allow creating one site
-      createSite();
+      await createSite();
     } else {
       // User already has one site, don't allow
-      redirect("/dashboard/pricing");
+      await redirect("/dashboard/pricing");
     }
   } else if (subStatus.status === "active") {
     // User has an active plan, he can create sites
