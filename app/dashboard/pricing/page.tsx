@@ -33,7 +33,6 @@ async function getData(userId: string) {
 export default async function PricingRoute() {
   const user = await requireUser();
   const data = await getData(user.id);
-  console.log("User object:", data);
 
   async function createCustomerPortal() {
     "use server";

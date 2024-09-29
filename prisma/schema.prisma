@@ -16,18 +16,18 @@ datasource db {
 
 model User {
   id           String  @id @unique
-  email        String  @unique
+  email        String
   firstName    String
   lastName     String
   profileImage String
   customerId   String? @unique
 
   createdAt DateTime @default(now())
-  Site      Site[]
-  posts     Post[]
 
-  Subscription                     Subscription? @relation(fields: [subscriptionStripeSubscriptionId], references: [stripeSubscriptionId])
-  subscriptionStripeSubscriptionId String?
+  Site  Site[]
+  posts Post[]
+
+  Subscription Subscription?
 }
 
 model Site {
@@ -62,15 +62,15 @@ model Post {
 }
 
 model Subscription {
-  stripeSubscriptionId String @id @unique
+  stripeSubscriptionId String   @id @unique
   interval             String
   status               String
   planId               String
   currentPeriodStart   Int
   currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String?  @unique
-  User      User[]
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
 }

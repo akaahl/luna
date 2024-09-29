@@ -26,8 +26,6 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
     }),
   ]);
 
-  console.log(subStatus, sites);
-
   if (!subStatus || subStatus.status !== "active") {
     if (sites.length < 1) {
       // Allow creating one site
