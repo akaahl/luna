@@ -13,7 +13,7 @@ import DefaultImage from "@/public/default.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export async function getData(userId: string) {
+async function getData(userId: string) {
   const [sites, articles] = await Promise.all([
     prisma.site.findMany({
       where: {
@@ -31,10 +31,11 @@ export async function getData(userId: string) {
       orderBy: {
         createdAt: "desc",
       },
+      take: 3,
     }),
   ]);
 
-  return { articles, sites };
+  return { sites, articles };
 }
 
 export default async function DashboardIndexPage() {
