@@ -8,6 +8,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Image from "next/image";
 import Hero from "./components/landing/Hero";
 import { Logos } from "./components/landing/Logos";
+import { Features } from "./components/landing/Features";
+import PricingTable, { PricingPlans } from "./components/shared/PricingTable";
 
 export default async function Home() {
   const { getUser } = getKindeServerSession();
@@ -17,6 +19,8 @@ export default async function Home() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
       <Hero />
       <Logos />
+      <Features />
+      <PricingTable />
     </div>
   );
 }
