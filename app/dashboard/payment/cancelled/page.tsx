@@ -14,7 +14,7 @@ export default function CancelledRoute() {
           <div className="mt-3 text-center sm:mt-5 w-full">
             <h2 className="text-xl font-semibold">Payment Cancelled</h2>
             <p className="text-sm mt-2 tracking-tight text-muted-foreground">
-              No worries, you won't be charged. Please try again.
+              No worries, you won&apos;t be charged. Please try again.
             </p>
             <Button className="w-full mt-5" asChild>
               <Link href="/dashboard/">Go back to dashboard</Link>

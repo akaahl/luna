@@ -2,6 +2,6 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
-    "eol-last": ["error", "always"],
+    "eol-last": ["error", "always"]
   }
 }
