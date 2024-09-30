@@ -1,3 +1,4 @@
+import { useGetUrl } from "@/app/hooks/url";
 import prisma from "@/app/utils/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
@@ -5,6 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  const { rootUrl } = useGetUrl();
 
   if (!user || user === null || !user.id) {
     throw new Error("Something went wrong");
@@ -28,5 +30,5 @@ export async function GET() {
     });
   }
 
-  return NextResponse.redirect('http://localhost:3000/dashboard/');
+  return NextResponse.redirect(`${rootUrl}/dashboard/`);
 }

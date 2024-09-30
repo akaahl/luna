@@ -1,5 +1,6 @@
 import SubmitButton from "@/app/components/dashboard/SubmitButtons";
 import PricingTable from "@/app/components/shared/PricingTable";
+import { useGetUrl } from "@/app/hooks/url";
 import prisma from "@/app/utils/db";
 import { requireUser } from "@/app/utils/requireUser";
 import { stripe } from "@/app/utils/stripe";
@@ -33,13 +34,14 @@ async function getData(userId: string) {
 export default async function PricingRoute() {
   const user = await requireUser();
   const data = await getData(user.id);
+  const { rootUrl } = useGetUrl();
 
   async function createCustomerPortal() {
     "use server";
 
     const session = await stripe.billingPortal.sessions.create({
       customer: data?.User?.customerId as string,
-      return_url: "http://localhost:3000/dashboard/",
+      return_url: `${rootUrl}/dashboard/`,
     });
 
     return redirect(session.url);

@@ -6,6 +6,7 @@ import { postSchema, SiteCreationSchema, siteSchema } from "./utils/zodSchemas";
 import prisma from "./utils/db";
 import { requireUser } from "./utils/requireUser";
 import { stripe } from "./utils/stripe";
+import { useGetUrl } from "./hooks/url";
 
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser();
@@ -166,6 +167,7 @@ export async function DeleteSite(formData: FormData) {
 
 export async function CreateSubscription() {
   const user = await requireUser();
+  const { rootUrl } = useGetUrl();
 
   let stripeUserId = await prisma.user.findUnique({
     where: { id: user.id },
@@ -207,8 +209,8 @@ export async function CreateSubscription() {
         quantity: 1,
       },
     ],
-    success_url: "http://localhost:3000/dashboard/payment/success",
-    cancel_url: "http://localhost:3000/dashboard/payment/cancelled",
+    success_url: `${rootUrl}/dashboard/payment/success`,
+    cancel_url: `${rootUrl}/dashboard/payment/cancelled`,
   });
 
   redirect(session.url as string);
